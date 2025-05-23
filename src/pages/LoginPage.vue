@@ -1,6 +1,7 @@
 <template>
-    <fieldset v-if="!isAuth">
+    <fieldset>
         <legend>Введите Ваши данные</legend>
+        <h1>TOKEN: {{ accessToken }}</h1>
         <div class="userInfo">
             <label for="login">Логин:</label>
             <input type="email" id="login" v-model="login">
@@ -11,7 +12,6 @@
         </div>
         <button @click="loginPerson">Отправить</button>
     </fieldset>
-    <div class="info" v-else>Вы успешно вошли в Ваш профиль!</div>
 </template>
 <script>
 import { useUserStore } from '@/stores/userStore';
@@ -23,7 +23,14 @@ export default {
         return {
             login: "example@mail.com",
             password: "P@ssw0rd123",
+            someAuth: false
         }
+    },
+    computed: {
+        accessToken() {
+            return this.someAuth ? localStorage.getItem('authToken') : localStorage.getItem('authToken');
+        },
+          ...mapState(useUserStore, ["isAuth"])
     },
     methods: {
         async loginPerson() {
@@ -37,10 +44,12 @@ export default {
                 }
 
                 if (counter === 2) {
-                    await this.loginUser(this.login, this.password)
-                
-                    this.login = "";
+                    await this.loginUser(this.login, this.password);
+                     this.login = "";
                     this.password = "";
+                    this.someAuth = true;
+                    this.$router.push('/')
+                
                 } else {
                     return alert("Логин должен содержать символ @ и символ .");
                 }
@@ -50,9 +59,6 @@ export default {
         },
 
         ...mapActions(useUserStore, ["loginUser"])
-    },
-    computed: {
-        ...mapState(useUserStore, ["isAuth"])
     }
 }
 </script>

@@ -2,16 +2,15 @@
     <div class="container">
         <router-link to="/login" v-if="!isAuth">Войти</router-link>
         <div v-else>
-            <router-link to="/profile" class="info" @click="userProfile()">{{ user.first_name }} {{ user.last_name }}</router-link>
-            <div class="info">Выйти</div>
+            <router-link to="/profile" class="info">{{ user.first_name }} {{ user.last_name }}</router-link>
+            <div class="info" @click="logout">Выйти</div>
         </div>
     </div>
 </template>
 <script>
 import { useUserStore } from '@/stores/userStore';
-import { mapState } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { loginService } from "@/services/loginService";
-const {login, userProfile} = loginService()
 
 export default {
     name: "Header",
@@ -19,14 +18,11 @@ export default {
         ...mapState(useUserStore, ["user", "isAuth"])
     },
     methods: {
-        // async getUser() {
-        //     try {
-        //         const response = await $axios.get("/user/profile");
-        //         return response.data
-        //     } catch (err) {
-        //         throw err
-        //     }
-        // }
+        logout() {
+            this.$router.push("/");
+            this.logoutUser()
+        },
+        ...mapActions(useUserStore, ["logoutUser"])
     }
 }
 </script>
