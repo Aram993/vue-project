@@ -1,14 +1,14 @@
 <script>
-import FirstComponent from './components/FirstComponent.vue';
+import QuizField from './components/QuizField.vue';
 
   export default {
     name: "App",
-    components: {FirstComponent}
+    components: {QuizField}
   }
 </script>
 
 <template>
-  
+  <QuizField/>
 </template>
 
 <style scoped>
