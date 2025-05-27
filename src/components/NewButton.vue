@@ -6,12 +6,9 @@
 <script>
 export default {
     name: "NewButton",
-    emits: ["incrementNumber", "checkAnswer"],
+    emits: [],
     methods: {
-        incrementAndCheck () {
-            this.$emit('incrementNumber');
-            this.$emit('checkAnswer');
-        }
+        
     }
 }
 </script>

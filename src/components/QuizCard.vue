@@ -1,15 +1,11 @@
 <template>
     <div class="card">
-        <div class="question">{{ questions[number].question }}</div>
-        <div :class="['answers', selected === 0 ? 'chosenElement' : '']" @click="selectAnswer(0)" ref="firstAnswer">{{ questions[number].answers[0] }}</div>
-        <div :class="['answers', selected === 1 ? 'chosenElement' : '']" @click="selectAnswer(1)" ref="secondAnswer">{{ questions[number].answers[1] }}</div>
-        <div :class="['answers', selected === 2 ? 'chosenElement' : '']" @click="selectAnswer(2)" ref="thirdAnswer">{{ questions[number].answers[2] }}</div>
-        <div :class="['answers', selected === 3 ? 'chosenElement' : '']" @click="selectAnswer(3)" ref="fourthAnswer">{{ questions[number].answers[3] }}</div>
-
+        <div class="question">{{ quizItem.question }}</div>
+        <div :class="{'answers': true, 'chosenElement': selectedAnswerIndex === index, 'trueAnswer': correctAnswer === index, 'wrongAnswer': wrongAnswer === index}" v-for="(item, index) in quizItem.answers" @click="selectedAnswerIndex = index">{{ item }}</div>
     </div>
     <div class="btns">
-        <NewButton @click="check">Проверить</NewButton>
-        <NewButton @increment-number="this.$emit('incrementNumber')">Далее</NewButton>
+        <button :disabled="selectedAnswerIndex === null" @click="checkAnswer" v-if="!firstClick">Next</button>
+        <button :disabled="selectedAnswerIndex === null" @click="onChangeQuestion" v-else>Next</button>
     </div>
 </template>
 <script>
@@ -18,28 +14,35 @@ import NewButton from './NewButton.vue';
 export default {
     name: "QuizCard",
     components: {NewButton},
-    props: ["questions", "number", "selected", "isTrue"],
-    emits: ["changeSelectedAnswer", "incrementNumber", "checkAnswer"],
+    props: ["quizItem"],
+    emits: ["changeQuestion"],
     data() {
         return {
-            answerIndex: null
+           selectedAnswerIndex: null,
+           firstClick: false,
+           correctAnswer: null,
+           wrongAnswer: null
         }
     },
     methods: {
-        selectAnswer(idx) {
-            this.$emit("changeSelectedAnswer", idx)
-            this.answerIndex = idx
-        },
-        check () {
-            // if (this.$emit("checkAnswer")) {
-            //     if (this.answerIndex === 2) {
-            //         this.$refs.firstAnswer.classList.replace("chosenElement", "trueAnswer")
-            //     }
-            // }
-            const a = this.$emit("checkAnswer");
-            console.log(a);
-            // console.log(this.$refs.firstAnswer);
+       onChangeQuestion() {
+            const isCorrect = this.selectedAnswerIndex === this.quizItem.rightAnswer;
+            this.$emit("changeQuestion", isCorrect);
+            this.selectedAnswerIndex = null;
+            this.firstClick = false;
+            this.correctAnswer = null;
+            this.wrongAnswer = null;
+       },
+
+       checkAnswer () {
+        if (this.selectedAnswerIndex === this.quizItem.rightAnswer) {
+            this.correctAnswer = this.selectedAnswerIndex;
+        } else {
+            this.wrongAnswer = this.selectedAnswerIndex;
+            this.correctAnswer = this.quizItem.rightAnswer;
         }
+            this.firstClick = true;
+       }
     }
 
 }
@@ -112,5 +115,17 @@ export default {
         display: flex;
         width: 50%;
         justify-content: space-around;
+
+        & > button {
+            width: 200px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #abc;
+            border: none;
+            color: bisque;
+            font-weight: bolder;
+            font-size: 20px;
+        }
     }
 </style>

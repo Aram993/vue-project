@@ -1,13 +1,11 @@
 <template>
     <div class="container">
         <QuizCard 
-        :questions="qna" 
-        :number="numberOfQuestion" 
-        :selected="selectedAnswer"
-        :is-true="isTrueAnswer"
-        @change-selected-answer="changeSelectedAnswer"
-        @increment-number="incrementNumberOfQuestion"
-        @check-answer="checkAnswer"/>  
+         :quizItem="qna[activeQuizIndex]"
+         @changeQuestion="changeQuestion"  
+         v-if="!isFinish"
+        />  
+        <h1 v-else>Results: {{ correctAnswersAmount }} / {{ qna.length }}</h1>
     </div>
 </template>
 <script>
@@ -72,37 +70,24 @@ export default {
                         rightAnswer: 2
                     }
             ],
-            numberOfQuestion: 0,
-            selectedAnswer: null,
-            isTrueAnswer: false,
+            activeQuizIndex: 0,
+            isFinish: false,
+            correctAnswersAmount: 0
         }
     },
 
     methods: {
-        incrementNumberOfQuestion () {
-            this.numberOfQuestion ++;
-            this.selectedAnswer = null;
-            this.isTrueAnswer = false;
-        },
-        changeSelectedAnswer (indexOfAnswer) {
-            this.selectedAnswer = indexOfAnswer;
-        },
-        checkAnswer () {
-            // if (this.qna[this.numberOfQuestion].rightAnswer === this.selectedAnswer) {
-            //     return true;
-            // } else {
-            //     return false
-            // }
-            // let a
-            // if (this.qna[this.numberOfQuestion].rightAnswer === this.selectedAnswer) {
-            //     a = true
-            // } else {
-            //     a = false
-            // }
-            // return a
+        changeQuestion (isCorrect) {
+            if (this.activeQuizIndex < this.qna.length - 1) {
+                this.activeQuizIndex ++;
+            } else {
+                this.isFinish = true;
+            }
 
-            return "YES!"
-        }
+            if (isCorrect) {
+                this.correctAnswersAmount ++;
+            }
+        },
     }
 }
 </script>
@@ -123,5 +108,12 @@ export default {
         display: flex;
         width: 50%;
         justify-content: space-around;
+    }
+
+    h1 {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: xx-large;
+        font-weight: bolder;
+        font-style: italic;
     }
 </style>
