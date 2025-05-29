@@ -1,14 +1,16 @@
 <script>
-import FirstComponent from './components/FirstComponent.vue';
+import Calculator from './components/Calculator.vue';
+
+
 
   export default {
     name: "App",
-    components: {FirstComponent}
+    components: {Calculator}
   }
 </script>
 
 <template>
-  
+  <Calculator/>
 </template>
 
 <style scoped>
