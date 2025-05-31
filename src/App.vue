@@ -8,7 +8,7 @@ import FirstComponent from './components/FirstComponent.vue';
 </script>
 
 <template>
-  
+  <RouterView/>
 </template>
 
 <style scoped>
