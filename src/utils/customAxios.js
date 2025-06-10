@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const $axios = axios.create({
-    baseURL: "https://76f6f1ff0891.vps.myjino.ru/api",
+    baseURL: "https://jsonplaceholder.typicode.com",
     withCredentials: true
 })
 
